@@ -31,8 +31,16 @@ authRouter.post('/signin', basicAuth, (req, res, next) => {
 
 authRouter.get('/users', bearerAuth, permissions('delete'), async (req, res, next) => {
   const userRecords = await users.findAll({});
-  const list = userRecords.map(user => user.username);
-  res.status(200).json(list);
+  // const list = userRecords.map(user => user.username);
+  res.status(200).json(userRecords);
+});
+
+authRouter.delete('/users/:id', bearerAuth, permissions('delete'), async (req, res, next) => {
+  let id = req.params.id;
+  const userRecords = await users.findOne({where:{id}});
+  const deleteUser = await userRecords.destroy();
+  // const list = userRecords.map(user => user.username);
+  res.status(200).json(deleteUser);
 });
 
 authRouter.get('/secret', bearerAuth, async (req, res, next) => {
